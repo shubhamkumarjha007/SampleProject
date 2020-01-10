@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+  <title>Random User Generator - Homepage</title>
+  <style media="screen">
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 2rem;
+      text-align: center;
+    }
+
+    button {
+      width: 100%;
+      padding: 1rem;
+      background: linear-gradient(to right, transparent, black, transparent);
+      color: white;
+      border: none;
+      outline: none;
+      box-shadow: none;
+      text-transform: uppercase;
+    }
+    button:active {
+      position: relative;
+      top: 1px;
+    }
+
+    table {
+      width: 80%;
+    }
+
+    th:first-child {
+      border-radius: 8px 0 0 0;
+    }
+    th:last-child {
+      border-radius: 0 8px 0 0;
+    }
+    th {
+      background: lightblue;
+      padding: 1rem;
+    }
+
+    tr:nth-child(even){
+      background: rgba(150,150,150,0.4);
+    }
+  </style>
+</head>
+<button id="addusrbtn" type="button" name="button">Add new user</button>
+  <table>
+    <thead>
+      <th>Name</th>
+      <th>Age</th>
+      <th>Gender</th>
+      <th>address</th>
+      <th>Email</th>
+      <th>Image</th>
+    </thead>
+    <tbody id="tblbdy">
+    </tbody>
+  </table>
+<body>
+  <script type="text/javascript">
+    $(document).ready(function(){
+      var users = [];
+      $("#addusrbtn").click(function(){
+        $.ajax({
+          url: 'https://randomuser.me/api/',
+          dataType: 'json',
+          success: function(data) {
+            let name = data.results["0"].name.title.concat(' ',data.results["0"].name.first,' ', data.results["0"].name.last);
+            let age = data.results["0"].dob.age;
+            let gender = data.results["0"].gender;
+            let streetnumber = data.results['0'].location.street.number;
+            let streetname = data.results['0'].location.street.name;
+            let city = data.results["0"].location.city;
+            let state = data.results["0"].location.state;
+            let country = data.results["0"].location.country;
+            let postcode = data.results["0"].location.postcode;
+            let address = streetnumber + ' ' + streetname + ' ' + city + ' ' + state + ' ' + country + ' ' + postcode;
+            let email = data.results['0'].email;
+            let image = data.results['0'].picture.thumbnail;
+            var user = {name:name, age:age, gender:gender, address:address, email:email, image:image }
+            users.push(user);
+          }
+        });
+
+console.log(users);
+     $("tbody tr").remove();
+    for (var i = 0; i < users.length; i++) {
+      console.log(users[i]);
+      let usrname = users[i].name;
+      let usrage = users[i].age;
+      let usrgender = users[i].gender;
+      let usraddres = users[i].address;
+      let usremail = users[i].email;
+      let usrimage = users[i].image;
+      $("tbody").prepend("<tr><td>"+usrname+"</td><td>"+usrage+"</td><td>"+usrgender+"</td><td>"+usraddres+"</td><td>"+usremail+"</td><td><img src='images/img1.jpg'></td></tr>");
+      $("tbody>tr:nth-child(1) td img").attr("src", usrimage);
+    }
+      });
+    });
+  </script>
+</body>
+
+</html>
